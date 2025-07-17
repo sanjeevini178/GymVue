@@ -1,12 +1,31 @@
 <script setup>
-    import { workoutProgram } from '../../utils';
-    console.log(workoutProgram);
+    import { exerciseDescriptions, workoutProgram } from '../../utils';
+import Portal from '../Portal.vue';
+import { ref, computed } from 'vue';
     const selectedWorkout = 4;
     const { workout, warmup } = workoutProgram[selectedWorkout];
-    console.log(workout);
+    /* let selectedExercise = null; */ // need stateful variables as javascript does not re-render (doesnt listen to changes in a variable)
+    let selectedExercise = ref(null);
+    console.log(selectedExercise);
+    const exerciseDesc = computed(() => exerciseDescriptions[selectedExercise.value]);
+
+    function handleCloseModal() {
+        selectedExercise.value = null;
+    }
 </script>
 
 <template>
+    <Portal v-if="selectedExercise">
+        <div class="exercise-description">
+            <h3>{{selectedExercise}}</h3>
+            <div>
+                <small>Description</small>
+                <p>{{ exerciseDesc }}</p>
+            </div>
+            <button @click="handleCloseModal()">Close <i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+    </Portal>
     <section id="workout-card">
       <div class="plan-card card">
         <div class="plan-card-header">
@@ -24,7 +43,9 @@
         <div class="workout-grid-row" v-for="(w, wIdx) in warmup" :key="wIdx">
             <div class="grid-name">
                 <p>{{ w.name }}</p>
-                <button>
+                <button @click="() => {
+                    selectedExercise = w.name
+                }">
                     <i class="fa-regular fa-circle-question"></i>
                 </button>
             </div>
@@ -41,7 +62,9 @@
             <div class="workout-grid-row" v-for="(w, wIdx) in workout" :key="wIdx">
             <div class="grid-name">
                 <p>{{ w.name }}</p>
-                <button>
+                <button @click="() => {
+                    selectedExercise = w.name
+                }">
                     <i class="fa-regular fa-circle-question"></i>
                 </button>
             </div>
@@ -133,6 +156,21 @@
     }
 
     .workout-btns button i {
+        padding-left: 0.5rem;
+    }
+
+    .exercise-description {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .exercise-description h3 {
+        text-transform: capitalize;
+    }
+
+    .exercise-description button i{
         padding-left: 0.5rem;
     }
 </style>
