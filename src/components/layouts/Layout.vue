@@ -4,7 +4,7 @@
 
 <template>
     <header>
-        <h1 class="text-gradient">Smolgram</h1>
+        <h1 class="text-gradient">GymVue</h1>
     </header>
     <main>
         <slot/>

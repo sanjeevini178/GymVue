@@ -2,7 +2,18 @@
     import { exerciseDescriptions, workoutProgram } from '../../utils';
 import Portal from '../Portal.vue';
 import { ref, computed } from 'vue';
-    const selectedWorkout = 4;
+
+const workoutType = ['Push','Pull','Legs']
+    const { data, selectedWorkout } = defineProps({
+        data: Object,
+        selectedWorkout: Number,
+        handleSaveWorkout: Function,
+        isWorkoutComplete: Boolean
+} 
+    )
+    
+
+
     const { workout, warmup } = workoutProgram[selectedWorkout];
     /* let selectedExercise = null; */ // need stateful variables as javascript does not re-render (doesnt listen to changes in a variable)
     let selectedExercise = ref(null);
@@ -15,7 +26,7 @@ import { ref, computed } from 'vue';
 </script>
 
 <template>
-    <Portal v-if="selectedExercise">
+    <Portal hello="world" :handleCloseModal="handleCloseModal" v-if="selectedExercise">
         <div class="exercise-description">
             <h3>{{selectedExercise}}</h3>
             <div>
@@ -29,10 +40,10 @@ import { ref, computed } from 'vue';
     <section id="workout-card">
       <div class="plan-card card">
         <div class="plan-card-header">
-            <p>Day {{  selectedWorkout < 9 ? '0' + selectedWorkout : selectedWorkout }}</p>
+            <p>Day {{  selectedWorkout < 9 ? '0' + (selectedWorkout+1) : (1+selectedWorkout) }}</p>
         <i class="fa-solid fa-dumbbell"></i>
         </div>
-        <h2>{{ 'Push' }} Workout</h2>
+        <h2>{{ workoutType[selectedWorkout%3] }} Workout</h2>
     </div>
     <div class="workout-grid">
         <h4 class="grid-name">Warm Up</h4>
@@ -70,15 +81,15 @@ import { ref, computed } from 'vue';
             </div>
                 <h6>{{ w.sets }}</h6>
                 <h6>{{ w.reps }}</h6>
-                <input class="grid-weights" placeholder="14kg" type="text"/>
+                <input v-model="data[selectedWorkout][w.name]" class="grid-weights" placeholder="14kg" type="text"/>
             
         </div>
     
     </div>  
     <div class="card workout-btns">
-        <button>Save & Exit <i class="fa-solid fa-save"></i></button>
-        <button>Complete <i class="fa-solid fa-check"></i></button>
-    </div>
+        <button @click="handleSaveWorkout">Save & Exit <i class="fa-solid fa-save"></i></button>
+        <button :disabled="!isWorkoutComplete" @click="handleSaveWorkout">Complete <i class="fa-solid fa-check"></i></button>
+        </div>
     </section>
     
 </template>
@@ -113,6 +124,12 @@ import { ref, computed } from 'vue';
         grid-column: span 7 / span 7;
     }
 
+    .workout-grid-line {
+        margin: 0.5rem 0;
+        height: 3px;
+        border-radius: 3px;
+        background: --var(--background-muted);
+    }
     .grid-name {
         grid-column: span 3 / span 3;
         display: flex;

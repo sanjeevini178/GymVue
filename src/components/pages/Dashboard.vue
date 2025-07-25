@@ -3,19 +3,23 @@ import { gymHealthFacts } from '../../utils'
 import Grid from '../Grid.vue'
 const randomNumber = Math.floor(Math.random() * gymHealthFacts.length)
 const todaysFact = gymHealthFacts[randomNumber];
-console.log(todaysFact);
+
+const props = defineProps({
+    handleSelectWorkout: Function,
+    firstIncompleteWorkoutIdx: Number
+})
  </script>
 
 <template>
     <section id="dashboard">
         <div class="card tip-container">
-            <h2> Welcome Smol Soldier</h2>
+            <h2> Welcome Soldier!</h2>
         <div>
             <p class="tip"><strong>Daily Tip</strong> <br/>{{ todaysFact }}</p>
         </div>
-        <button>Start Workout &rarr;</button>
+        <button @click="() => handleSelectWorkout(firstIncompleteWorkoutIdx < 0 ? 0 : firstIncompleteWorkoutIdx)">Start Workout &rarr;</button>
     </div>
-    <Grid />
+    <Grid v-bind="props"/>
     </section>
 </template>
 

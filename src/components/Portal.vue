@@ -1,4 +1,9 @@
 <script setup>
+    /* telling it to expect these variables */
+    const { hello, handleCloseModal} = defineProps({
+        hello: String,
+        handleCloseModal: Function
+    })
 
  </script>
 
@@ -6,7 +11,7 @@
     <Teleport to="#portal">
         <section>
         <div class="portal-container">
-            <div role="button" tabindex="0" @click="() => {}" class="portal-underlay"></div>
+            <div role="button" tabindex="0" @click="handleCloseModal" class="portal-underlay"></div>
             <div class="portal-content">
                 <slot/>
             </div>
